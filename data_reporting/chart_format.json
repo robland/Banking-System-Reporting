@@ -1,0 +1,24 @@
+{
+  "type":"AreaChart3D",
+  "title":"Area Chart",
+  "style":13,
+  "x_axis": "Test",
+  "y_axis": "Percentage",
+  "legend": null,
+  "src_data": {
+    "existing_table":true,
+    "sheetname": "",
+    "area":""
+  },
+  "Reference": {
+    "ref1": {
+      "worksheet": "Sheet1",
+      "min_col": "min_col"
+    },
+    "ref2": {
+      "worksheet": "Sheet1",
+      "min_col": "min_col"
+    }
+  },
+  "position": "A10"
+}

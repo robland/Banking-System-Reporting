@@ -1,0 +1,10 @@
+{
+  "model": "transaction",
+  "filters":
+    {
+      "debit": ["range", [0, 50000]]
+    },
+  "calcul": {
+    "Sum": "debit"
+  }
+}

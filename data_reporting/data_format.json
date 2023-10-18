@@ -1,0 +1,7 @@
+{
+  "model": "transaction",
+  "filters":
+    {
+      "debit": ["in", [0, 50000]]
+    }
+}

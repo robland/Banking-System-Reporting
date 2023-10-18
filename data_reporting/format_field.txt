@@ -1,0 +1,52 @@
+{
+    "STRING":[
+                ('exact','exact'),
+                ('iexact','iexact'),
+                ('contains','contains'),
+                ('icontains','icontains'),
+                ('in','in'),
+                ('startswith','startswith'),
+                ('istartswith','istartswith'),
+                ('endswith','endswith'),
+                ('iendswith','iendswith'),
+                ('range','range'),
+                ('regex','regex'),
+                ('isregex','isregex')
+    ],
+    "NUMBER":[
+                ('exact','exact'),
+                ('iexact','iexact'),
+                ('in','in'),
+                ('range','range'),
+                ('gt','gt'),
+                ('gte','gte'),
+                ('lt','lte'),
+    ],
+    "DATETIME":[
+                ('exact','exact'),
+                ('iexact','iexact'),
+                ('date', 'date),
+                ('year', 'year'),
+                ('month', 'month'),
+                ('day', 'day'),
+                ('week', 'week'),
+                ('week_day', 'week_day'),
+                ('quarter', 'quarter'),
+                ('time', 'time'),
+                ('hour', 'hour'),
+                ('minute', 'minute'),
+                ('second', 'second')
+    ]
+    "DATE":[
+                ('exact','exact'),
+                ('iexact','iexact'),
+                ('date', 'date),
+                ('year', 'year'),
+                ('month', 'month'),
+                ('day', 'day'),
+                ('week', 'week'),
+                ('week_day', 'week_day'),
+                ('quarter', 'quarter'),
+    ]
+}
+

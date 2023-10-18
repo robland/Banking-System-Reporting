@@ -1,0 +1,266 @@
+{% extends 'block/base.html' %}
+
+{% block title %}
+    Créer un Utilisateur
+{% endblock %}
+
+{% block main %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Créer un Model d'Extraction de Données</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+            {% for error in form.errors.values %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+        </div>
+        <!-- Alert Messages End -->
+
+        <div class="row d-flex">
+            <div class="col-md-12">
+
+                <!-- Profile Edit Form -->
+                <div class="card row-md-4">
+                            <h5 class="card-header">{% if model_reporting %}Modifier le Modèle: {{ model_reporting|upper }}{% else %}Nouveau Modèle de Reporting{% endif %}</h5>
+                            <div class="card-body">
+                                <div>
+                                    <form id="id-form" action="{% if table_reporting %}{% else %}{% endif %}" method="post" class="profile-form" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{ form.errors }}
+                                    {{ value_form.errors }}
+                                    {{ form.operator_string.field.type }}
+
+                                    <input type="hidden" name="next_action" id="id_next_action" value="0">
+                                    <input type="hidden" name="value" id="{{ value_form.value.id_for_label }}" value="{{ value_form.value.value|default:'' }}">
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Titre<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input name="name" type="text" class="form-control" id="{{ form.name.id_for_label }}" value="{{ form.name.value|default:'' }}">
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="{{ form.field.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Champ Associé<small><sup>*</sup></small></label>
+
+                                          <div class="col-md-8 col-lg-4">
+                                              <select name="field" type="text" class="form-control" id="{{ form.field.id_for_label }}">
+                                                  <option>----------</option>
+
+                                                  {% for field in model_fields %}
+                                                    <option value="{{ field.0 }}" {% if form.field.value == table.model %}selected{% endif %}>{{ field.0|upper }}</option>
+                                                  {% endfor %}
+
+                                              </select>
+                                          </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="{{ form.operator_string.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Operateur<small><sup>*</sup></small></label>
+
+                                          <div class="col-md-8 col-lg-4">
+                                              <select name="operator_string" type="text" class="form-control" id="{{ form.operator_string.id_for_label }}">
+                                                  <option>----------</option>
+
+
+                                              </select>
+                                          </div>
+                                    </div>
+                                    <div class="row mb-3" id="checkbox_area">
+
+                                    </div>
+
+                                    <div class="row mb-3" id="values_area">
+                                            <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Titre<small><sup>*</sup></small></label>
+                                            <div class="col values">
+                                                <div class="col-sm-2 col-md-2 col-lg-1 mb-3 value">
+                                                    <input name="" type="text" class="form-control values" id="id_values" value="">
+                                                </div>
+                                                <div>
+                                                    <i class="btn btn-primary bi bi-plus" id="add-value-btn"></i>
+                                                    <i class="btn btn-primary bi bi-shield-minus" id="delete-value-btn"></i>
+                                                </div>
+
+                                            </div>
+
+                                    </div>
+
+
+                                    <div class="text-center">
+                                      <button type="submit" class="">Enregistrer</button>
+                                        <button type="submit" class="">Enregistrer</button>
+                                        <button type="submit" class="">Enregistrer</button>
+                                    </div>
+                                    {% comment %}
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Table de données<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <select id="id-model" class="w-100" name="name">
+                                            <option value="">-----------</option>
+
+
+                                            {% for model in models %}
+
+                                                <option value="{{ model.model }}" >{{ model.model }}</option>
+
+                                            {% endfor %}
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+
+                                          {% for model in models %}
+                                              <div class="col my-3">
+                                                <div class="mx-3">
+                                                    <input type="checkbox" id="id_{{ model.model }}" data-field-type="{{ model.model }}" value="{{ model.model }}">
+                                                    <label for="id_{{ model.model }}">{{ model.model }}</label>
+                                                </div>
+                                                  <div>
+                                                      <select>
+                                                            <option> Hello WOrld!</option>
+                                                        </select>
+                                                  </div>
+
+
+                                              </div>
+                                          {% endfor %}
+
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Table de données<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input type="checkbox" value="" checked>
+                                      </div>
+                                    </div>
+                                    {% endcomment %}
+
+                                </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+                  <!-- End Profile Edit Form -->
+
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+
+{% endblock %}
+{% block footer_script %}
+        <script id="mp_template" type="text/template">
+            <div class="col-md-8 col-lg-4">
+                <input class="columns" type="checkbox">
+                <label for="" class="col-md-4 col-lg-3 col-form-label my_label">{{ value }}<small><sup>*</sup></small></label>
+            </div>
+        </script>
+
+
+        <script type="application/javascript">
+
+        const axios_instance = axios.create({
+                    baseURL: 'http://127.0.0.1:8000/api/data-reference/',
+                    timeout: 1000,
+                   });
+
+        const add_block = (value, index)=>{
+            let checkbox = $('<input>').attr("type", "checkbox").attr("class", "columns").attr("data-value", value);
+            if ("{{ form.columns.value }}".search(value)>0){
+                checkbox.attr("checked", "")
+            }
+            let a = $("<div>").attr("class", "col-md-8 col-lg-4 " + value + "_" + index).append(checkbox)
+            $("#checkbox_area").append(
+                a
+            )
+            $("."+value+"_"+index).append($('<label>').attr("class", "col-md-4 col-lg-3 col-form-label").text(value))
+        }
+        $(document).ready(()=>{
+            const table_name = "#{{ form.table_name.id_for_label }}"
+            const field_array = []
+            $("#{{ form.field.id_for_label }}").on('change', (event)=>{
+                let field = event.target.value
+                 $('#checkbox_area').empty()
+                if (field){
+                    axios_instance.get("{{ object_type.table_name }}" + "/" + field + "/lookups/").then((response) => {
+                        const obj = response.data
+                        $('#{{ form.operator_string.id_for_label }}').empty()
+
+                        obj.map((value, index) => {
+                        console.log(value, index)
+                            $('#{{ form.operator_string.id_for_label }}').append($('<option>').attr("value", value).text(value))
+                       // add_block(value[0], index)
+                        })
+                })}
+            })
+            $("{{ form.table_name.id_for_label }}").ready(()=>{
+                axios_instance.get("{{ form.table_name.value }}" + "/fields/").then((response) => {
+                        response.data.map((value, index) => {
+                        console.log(value[0], index)
+                       add_block(value[0], index)
+                        })
+                })
+            })
+
+            $("#id-form").on("submit", (event)=>{
+
+                let values = "";
+                let children = $("input.values");
+                console.log(children);
+                for(let i=0; i<children.length; i++){
+                    values = values +  children[i].value + ";"
+                    console.log(values)
+                }
+                $("#{{ value_form.value.id_for_label }}").attr("value", values);
+
+            })
+
+
+            $('#add-value-btn').on('click', (event)=>{
+                const container = $(".values")
+                const elt_to_add = $('<div>').attr("class", "col-sm-2 col-md-2 col-lg-1 mb-3 added")
+                                             .append($('<input>')
+                                             .attr("type", "text")
+                                             .attr("value", "")
+                                             //.attr("name", "value")
+                                             .attr("class", "form-control values"))
+                $('.value').after(elt_to_add)
+                // container.append(elt_to_add)
+            })
+
+            $('#delete-value-btn').on('click', (event)=>{
+                $(".added").last().remove()
+            })
+
+        })
+
+        </script>
+    {% endblock %}

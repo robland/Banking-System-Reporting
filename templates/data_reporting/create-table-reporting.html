@@ -1,0 +1,225 @@
+{% extends 'block/base.html' %}
+
+{% block title %}
+    Créer un Utilisateur
+{% endblock %}
+
+{% block main %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Créer un Model d'Extraction de Données</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+            {% for error in form.errors.values %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+        </div>
+        <!-- Alert Messages End -->
+
+        <div class="row d-flex">
+            <div class="col-md-12">
+
+                <!-- Profile Edit Form -->
+                <div class="card row-md-4">
+                            <h5 class="card-header">{% if model_reporting %}Modifier le Modèle: {{ model_reporting|upper }}{% else %}Nouveau Modèle de Reporting{% endif %}</h5>
+                            <div class="card-body">
+                                <div>
+                                    <form id="id-form" action="{% if table_reporting %}{% url 'data_reporting:edit-table-reporting' table_reporting.pk %}{% else %}{% url 'data_reporting:create-table-reporting' model_reporting.pk %}{% endif %}" method="post" class="profile-form" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{ form.errors }}
+                                    <input type="hidden" name="next_action" id="id_next_action" value="0">
+                                    <input type="hidden" name="columns" id="id_columns" value="{{ form.columns.value|default:'' }}">
+                                    <div class="row mb-3">
+                                      <label for="{{ form.title.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Titre<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input name="title" type="text" class="form-control" id="{{ form.title.id_for_label }}" value="{{ form.title.value|default:'' }}">
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="{{ form.table_name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Table Associée<small><sup>*</sup></small></label>
+
+                                          <div class="col-md-8 col-lg-4">
+                                              <select name="table_name" type="text" class="form-control" id="{{ form.table_name.id_for_label }}">
+                                                  <option>----------</option>
+                                                  {% for table in models %}
+                                                    <option value="{{ table.model}}" {% if form.table_name.value == table.model %}selected{% endif %}>{{ table.model|upper }}</option>
+                                                  {% endfor %}
+
+                                              </select>
+                                          </div>
+                                    </div>
+                                    <div class="row mb-3" id="checkbox_area">
+
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="{{ form.sheet_name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Feuille<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input name="sheet_name" type="text" class="form-control" id="{{ form.sheet_name.id_for_label }}" value="{{ form.sheet_name.value|default:'' }}">
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="{{ form.cell.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Cellule<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input name="cell" type="text" class="form-control" id="{{ form.cell.id_for_label }}" value="{{ form.cell.value|default:'' }}">
+                                      </div>
+                                    </div>
+
+
+                                    <div class="text-center">
+                                      <button type="submit" class="">Enregistrer</button>
+                                        <button type="submit" class="">Enregistrer</button>
+                                        <button type="submit" class="">Enregistrer</button>
+                                    </div>
+                                    {% comment %}
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Table de données<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <select id="id-model" class="w-100" name="name">
+                                            <option value="">-----------</option>
+
+
+                                            {% for model in models %}
+
+                                                <option value="{{ model.model }}" >{{ model.model }}</option>
+
+                                            {% endfor %}
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+
+                                          {% for model in models %}
+                                              <div class="col my-3">
+                                                <div class="mx-3">
+                                                    <input type="checkbox" id="id_{{ model.model }}" data-field-type="{{ model.model }}" value="{{ model.model }}">
+                                                    <label for="id_{{ model.model }}">{{ model.model }}</label>
+                                                </div>
+                                                  <div>
+                                                      <select>
+                                                            <option> Hello WOrld!</option>
+                                                        </select>
+                                                  </div>
+
+
+                                              </div>
+                                          {% endfor %}
+
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Table de données<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input type="checkbox" value="" checked>
+                                      </div>
+                                    </div>
+                                    {% endcomment %}
+
+                                </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+                  <!-- End Profile Edit Form -->
+
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+
+{% endblock %}
+{% block footer_script %}
+        <script id="mp_template" type="text/template">
+            <div class="col-md-8 col-lg-4">
+                <input class="columns" type="checkbox">
+                <label for="" class="col-md-4 col-lg-3 col-form-label my_label">{{ value }}<small><sup>*</sup></small></label>
+            </div>
+        </script>
+
+
+        <script type="application/javascript">
+        let columns = "";
+        const axios_instance = axios.create({
+                    baseURL: 'http://127.0.0.1:8000/api/data-reference/',
+                    timeout: 1000,
+                   });
+
+        const add_block = (value, index)=>{
+            let checkbox = $('<input>').attr("type", "checkbox").attr("class", "columns").attr("data-value", value);
+            if ("{{ form.columns.value }}".search(value)>0){
+                checkbox.attr("checked", "")
+            }
+            let a = $("<div>").attr("class", "col-md-8 col-lg-4 " + value + "_" + index).append(checkbox)
+            $("#checkbox_area").append(
+                a
+            )
+            $("."+value+"_"+index).append($('<label>').attr("class", "col-md-4 col-lg-3 col-form-label").text(value))
+        }
+        $(document).ready(()=>{
+            const table_name = "#{{ form.table_name.id_for_label }}"
+            const field_array = []
+            $("#{{ form.table_name.id_for_label }}").on('change', (event)=>{
+                let table = event.target.value
+                 $('#checkbox_area').empty()
+                if (table){
+                    axios_instance.get(table + "/fields/").then((response) => {
+                        response.data.map((value, index) => {
+                        console.log(value[0], index)
+                       add_block(value[0], index)
+                        })
+                })}
+            })
+            $("{{ form.table_name.id_for_label }}").ready(()=>{
+                axios_instance.get("{{ form.table_name.value }}" + "/fields/").then((response) => {
+                        response.data.map((value, index) => {
+                        console.log(value[0], index)
+                       add_block(value[0], index)
+                        })
+                })
+            })
+
+
+            $("#id-form").on("submit", (event)=>{
+
+                let children = $("#checkbox_area input:checked");
+                for(let i=0; i<children.length; i++){
+                    columns = columns +  children[i].attributes["data-value"].value + ";"
+                }
+                $("#{{ form.columns.id_for_label }}").attr("value", columns);
+
+            })
+
+        })
+
+        </script>
+    {% endblock %}

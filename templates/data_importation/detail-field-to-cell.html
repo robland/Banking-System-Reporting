@@ -1,0 +1,108 @@
+<!-- Profile Edit Form -->
+                <form action="{% url 'import_data:create-regular-expression' pk  %}" id="id_form_reg_expression" method="post" class="profile-form">
+                    {% csrf_token %}
+                    <input type="hidden" id="id_next_action" name="next_action" value="0"/>
+                    <div class="row mb-3">
+                      <label for="{{ cell_form.cell.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Cellule Excel: <small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="cell" type="text" class="form-control" id="{{ cell_form.cell.id_for_label }}" value="{{ cell_form.cell.value|default:'' }}">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="{{ cell_form.sheet_name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Feuille Excel: <small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="sheet_name" type="text" class="form-control" id="{{ cell_form.sheet_name.id_for_label }}" value="{{ cell_form.sheet_name.value|default:'' }}">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="{{ cell_form.previous_cell.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">lier à la Cellule: <small><sup>*</sup></small></label>
+                        <div class="col-md-8 col-lg-9">
+
+                          <select name="previous_cell" class="form-control" id="{{ cell_form.previous_cell.id_for_label }}">
+                            <option value=""> --------</option>
+
+                              {% for cell in previous_cell %}
+                                  <option value={{ cell.pk }} {% if cell.0 == profile.cell %}selected{% endif %}>{{ cell }}</option>
+                              {% endfor %}
+                          </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="{{ form.expression.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Expression Régulière<small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="expression" type="text" class="form-control" id="{{ form.expression.id_for_label }}" value="{{ form.expression.value|default:'' }}">
+                      </div>
+                    </div>
+                    {% comment %}
+                    <div class="row mb-3">
+                        <label for="{{ form.previous_reg_exp.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">linked to<small><sup>*</sup></small></label>
+                        <div class="col-md-8 col-lg-9">
+
+                          <select name="previous_reg_exp" class="form-control" id="{{ form.previous_reg_exp.id_for_label }}">
+                            <option value=""> ---Lier à l'expression---</option>
+
+                              {% for reg in previous_reg %}
+                                  <option value={{ reg.pk }} {% if reg.0 == profile.reg %}selected{% endif %}>{{ reg }}</option>
+                              {% endfor %}
+                          </select>
+                        </div>
+                    </div>
+                    {% endcomment %}
+                    <div class="row mb-3">
+                        <label for="{{ form.is_dependant.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Is dependant?<small><sup>*</sup></small></label>
+                       <div class="col-md-8 col-lg-9">
+                            <input class="form-check-input" type="checkbox" name="is_dependant" id="{{ form.is_dependant.id_for_label }}">
+                       </div>
+
+                    </div>
+                    <div class="row mb-3">
+                        <label for="{{ form.is_splitter.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Is a cutter?<small><sup>*</sup></small></label>
+                       <div class="col-md-8 col-lg-9">
+                            <input class="form-check-input" type="checkbox" name="is_splitter" id="{{ form.is_splitter.id_for_label }}">
+                       </div>
+
+                    </div>
+                    <div class="row mb-3">
+                        <label for="{{ form.can_extract_data.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Can extract data?<small><sup>*</sup></small></label>
+                       <div class="col-md-8 col-lg-9">
+                            <input class="form-check-input" type="checkbox" name="can_extract_data" id="{{ form.can_extract_data.id_for_label }}">
+                       </div>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+                      <label for="{{ form.comment.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Commentaire</label>
+                      <div class="col-md-8 col-lg-9">
+                        <textarea name="comment" class="form-control" id="{{ form.comment.id_for_label }}" style="height: 100px">{{ form.comment.value|default:'' }} </textarea>
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" class="">Enregistrer</button>
+                      <button type="submit" class="" id="save_and_add-1">Enregistrer & Ajouter une cellule</button>
+                        <button type="submit" class="" id="save_and_add-2">Enregistrer & Ajouter</button>
+                    </div>
+
+                </form>
+                  <!-- End Profile Edit Form -->
+
+{% block footer_script %}
+    <script type="application/javascript">
+        $(document).ready(()=>{
+            $("#save_and_add-1").on("click", (event)=>{
+                event.preventDefault()
+                // $("#id_next_action").data("value", "1")
+                $("#id_next_action").attr("value", "1")
+                $("#id_form_reg_expression").submit()
+            })
+            $("#save_and_add-2").on("click", (event)=>{
+                event.preventDefault()
+                // $("#id_next_action").data("value", "1")
+                $("#id_next_action").attr("value", "2")
+                $("#id_form_reg_expression").submit()
+            })
+        })
+    </script>
+
+{% endblock %}

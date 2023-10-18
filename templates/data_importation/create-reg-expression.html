@@ -1,0 +1,219 @@
+{% extends 'block/base.html' %}
+
+{% block title %}
+    Ajouter une expression régulière
+{% endblock %}
+
+{% block main %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Ajouter une expression régulière au model</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+            {{ form.errors }}
+            {{ cell_form.errors }}
+            {% for error in form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+        </div>
+        <!-- Alert Messages End -->
+
+        <div class="row d-flex">
+            <div class="col-md-12">
+
+                <div class="card row-md-3">
+                            <h5 class="card-header">{% if cell_form %}Nouvelle Cellule{% else %}Nouvelle Expression Régulière{% endif %}</h5>
+                            <div class="card-body">
+
+                                <form action="{% if cell_form %}{% url 'import_data:create-regular-expression' pk  %}{% else %}{% url 'import_data:create-regular-expression-for-other-format' pk %}{% endif %}" id="id_form_reg_expression" method="post" class="profile-form">
+                    {% csrf_token %}
+                    <input type="hidden" id="id_next_action" name="next_action" value="0"/>
+                                {% if cell_form %}
+                    <div class="row mb-3">
+                      <label for="{{ cell_form.cell.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Cellule Excel: <small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="cell" type="text" class="form-control" id="{{ cell_form.cell.id_for_label }}" value="{{ cell_form.cell.value|default:'' }}">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="{{ cell_form.sheet_name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Feuille Excel: <small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="sheet_name" type="text" class="form-control" id="{{ cell_form.sheet_name.id_for_label }}" value="{{ cell_form.sheet_name.value|default:'' }}">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="{{ cell_form.previous_cell.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">lier à la Cellule: <small><sup>*</sup></small></label>
+                        <div class="col-md-8 col-lg-9">
+
+                          <select name="previous_cell" class="form-control" id="{{ cell_form.previous_cell.id_for_label }}">
+                            <option value=""> --------</option>
+
+                              {% for cell in previous_cell %}
+                                  <option value={{ cell.pk }} {% if cell.0 == profile.cell %}selected{% endif %}>{{ cell }}</option>
+                              {% endfor %}
+                          </select>
+                        </div>
+                    </div>
+                                {% endif %}
+                    <div class="row mb-3">
+                      <label for="{{ form.expression.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Expression Régulière<small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="expression" type="text" class="form-control" id="{{ form.expression.id_for_label }}" value="{{ form.expression.value|default:'' }}">
+                      </div>
+                    </div>
+                    {% if not cell_form %}
+                    <div class="row mb-3">
+                        <label for="{{ form.previous_reg_exp.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">linked to<small><sup>*</sup></small></label>
+                        <div class="col-md-8 col-lg-9">
+
+                          <select name="previous_reg_exp" class="form-control" id="{{ form.previous_reg_exp.id_for_label }}">
+                            <option value=""> ---Lier à l'expression---</option>
+
+                              {% for reg in previous_reg %}
+                                  <option value={{ reg.pk }} {% if reg.0 == profile.reg %}selected{% endif %}>{{ reg }}</option>
+                              {% endfor %}
+                          </select>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row mb-3">
+                        <label for="{{ form.is_dependant.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Is dependant?<small><sup>*</sup></small></label>
+                       <div class="col-md-8 col-lg-9">
+                            <input class="form-check-input" type="checkbox" name="is_dependant" id="{{ form.is_dependant.id_for_label }}">
+                       </div>
+
+                    </div>
+                    <div class="row mb-3">
+                        <label for="{{ form.is_splitter.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Is a cutter?<small><sup>*</sup></small></label>
+                       <div class="col-md-8 col-lg-9">
+                            <input class="form-check-input" type="checkbox" name="is_splitter" id="{{ form.is_splitter.id_for_label }}">
+                       </div>
+
+                    </div>
+                    <div class="row mb-3">
+                        <label for="{{ form.can_extract_data.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Can extract data?<small><sup>*</sup></small></label>
+                       <div class="col-md-8 col-lg-9">
+                            <input class="form-check-input" type="checkbox" name="can_extract_data" id="{{ form.can_extract_data.id_for_label }}">
+                       </div>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+                      <label for="{{ form.comment.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Commentaire</label>
+                      <div class="col-md-8 col-lg-9">
+                        <textarea name="comment" class="form-control" id="{{ form.comment.id_for_label }}" style="height: 100px">{{ form.comment.value|default:'' }} </textarea>
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" class="">Enregistrer</button>
+                        {% if cell_form %}
+                            <button type="submit" class="" id="save_and_add-1">Enregistrer & Ajouter une cellule</button>
+                        {% else %}
+                            <button type="submit" class="" id="save_and_add-1">Enregistrer & Ajouter une Reg</button>
+                        {% endif %}
+                        <button type="submit" class="" id="save_and_add-2">Enregistrer & Ajouter</button>
+                    </div>
+
+                </form>
+
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-primary">Add</a>
+                                <a href="#" class="btn btn-primary">Edit</a>
+                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalBase{{ base.pk }}">Delete</a>
+
+                            </div>
+                            <div class="modal fade" id="modalBase{{ base.pk }}" tabindex="-1" role="dialog" aria-labelledby="modal-base-title{{ base.pk }}" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="modal-base-title{{ fields.pk }}">Confirmation</h5>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <div class="col-md-12">
+
+                                            <!-- Profile Edit Form -->
+                                            <form action="#" id="form_delete_base_{{ base.pk }}" method="post" class="profile-form">
+                                                {% csrf_token %}
+                                                <div class="row m-auto">
+                                                  <h1>Êtes vous sûr(e) de vouloir supprimer cet élément?</h1>
+                                                  <input name="confirmation" type="hidden"  id="id_confirmation" value="no">
+                                                  <input name="key" type="hidden" id="id_key" value="">
+                                                </div>
+
+
+                                            </form>
+                                              <!-- End Profile Edit Form -->
+
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="base-cancel btn btn-danger" id="btn_delete_{{ base.pk }}">Delete</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                            </div>
+
+
+                        </div>
+
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+{% endblock %}
+{% block footer_script %}
+    <script type="application/javascript">
+        $(document).ready(()=>{
+            $("#save_and_add-1").on("click", (event)=>{
+                event.preventDefault()
+                // $("#id_next_action").data("value", "1")
+                $("#id_next_action").attr("value", "1")
+                $("#id_form_reg_expression").submit()
+            })
+            $("#save_and_add-2").on("click", (event)=>{
+                event.preventDefault()
+                // $("#id_next_action").data("value", "1")
+                $("#id_next_action").attr("value", "2")
+                $("#id_form_reg_expression").submit()
+            })
+        })
+    </script>
+
+{% endblock %}

@@ -1,0 +1,448 @@
+{% extends 'block/base.html' %}
+{% block title %}
+    Importation de données
+{% endblock %}
+{% block links %}
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Dropzone cdn -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+{% endblock %}
+
+{% block main %}
+      <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Configurations Système / Monétique</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Accueil</a></li>
+          <li class="breadcrumb-item active">Congiguration Système</li>
+        </ol>
+      </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="config-index">
+
+      <div class="container-fluid">
+
+        <!-- Flash Message -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Welcome ! Manydi</strong> Vous êtes connecté.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Modèle d'importation parfaitement créé.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>failure !</strong> Echec création du modèle d'importation.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Département parfaitement créé.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>failure !</strong> Echec création de Département.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        </div>
+        <!-- Flash Message -->
+
+        <div class="row">
+
+          <div class="col-md-12">
+
+            <div class="mt-2">
+              <a href="#" class="mx-3"><i class="bi bi-person-plus-fill"></i> Users</a>
+              <a href="#" class="mx-3"><i class="bi bi-diagram-2-fill"></i> Models</a>
+              <a href="#" class="mx-3"><i class="bi bi-file-earmark-x-fill"></i> Reportings</a>
+            </div>
+            <div class="divider"></div>
+
+            <!-- Tabs Buttons -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="create-dpt-tab" data-bs-toggle="tab" data-bs-target="#create-dpt" type="button" role="tab" aria-controls="list" aria-selected="false">Création Département</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="list-dpt-tab" data-bs-toggle="tab" data-bs-target="#list-dpt" type="button" role="tab" aria-controls="list" aria-selected="false">Liste Département</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="create-tab" data-bs-toggle="tab" data-bs-target="#create" type="button" role="tab" aria-controls="create" aria-selected="true">Création modèles</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab" aria-controls="list" aria-selected="false">Modèles créés</button>
+              </li>
+            </ul>
+            <!-- Tabs Buttons End -->
+
+            <div class="tab-content" id="myTabContent">
+
+              <!-- Create Department -->
+              <div class="tab-pane fade" id="create-dpt" role="tabpanel" aria-labelledby="create-dpt-tab">
+
+                <form action="#" method="post" role="form" class="dash-form">
+
+                  <fieldset class="px-4">
+
+                    <legend>Département</legend>
+                    <div class="divider"></div>
+
+                    <div class="row line-dpt">
+
+                      <div class="form-group col-md-6 mt-3">
+                        <label for="" class="">Département 1</label>
+                        <input type="name" class="w-100" name="name" id="" >
+                      </div>
+
+                      <div class="col-md-2 mt-3 pt-4">
+                        <a href="#" class="add-dpt"><i class="bi bi-plus-circle-fill mr-2"></i>Add line</a>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group my-0">
+                      <button type="submit" class="col-md-2">Créer</button>
+                    </div>
+
+
+                  </fieldset>
+
+                </form>
+
+              </div>
+              <!-- Create Department End -->
+
+              <!-- List Department -->
+              <div class="tab-pane fade" id="list-dpt" role="tabpanel" aria-labelledby="list-dpt-tab">
+
+                <table id="dpt-table" class="table table-striped table-bordered display nowrap mt-5" style="width:100%">
+                  <thead>
+                      <tr>
+                          <th>Département</th>
+                          <th>Date</th>
+                          <th>heure</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Monétique</td>
+                      <td>2020-05-22</td>
+                      <td>04:49:34</td>
+                      <td>
+                        <a href="#"><i class="bi bi-trash"></i></a>
+                        <a href="#"><i class="bi bi-pen"></i></a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Trésorerie</td>
+                      <td>2018-05-22</td>
+                      <td>04:49:34</td>
+                      <td>
+                        <a href="#"><i class="bi bi-trash"></i></a>
+                        <a href="#"><i class="bi bi-pen"></i></a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+              </div>
+              <!-- List Department End -->
+
+              <!-- Create Model -->
+              <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
+
+                <div class="">
+
+                  <form action="#" method="post" role="form" class="dash-form">
+
+                    <fieldset class="px-4">
+
+                      <legend>Modèle de format</legend>
+                      <div class="divider"></div>
+
+                      <div class="row">
+
+                        <div class="form-group col-md-6 mt-3">
+                          <label for="" class="">Nom du fichier</label>
+                          <input type="name" class="w-100" name="name" id="" >
+                        </div>
+
+                        <div class="form-group col-md-6 mt-3">
+                          <label for="" class="">Format</label>
+                          <select id="model-format" class="w-100" name="name" id="" >
+                            <option value="">-----------</option>
+                            <option value="csv">txt - csv - rtf</option>
+                            <option value="excel">excel</option>
+                          </select>
+                        </div>
+
+                      </div>
+
+                    </fieldset>
+
+                    <div class="content">
+
+                      <!-- CSV Regex -->
+                      <fieldset id="csv" class="regex">
+
+                        <legend>Expression régulière format csv</legend>
+                        <div class="divider"></div>
+
+                        <div class="form-group mt-3">
+                          <label for="" class="">Expression</label>
+                          <input type="name" class="w-100" name="name" id="" >
+                        </div>
+
+                        <div class="form-group row d-flex justify-content-center mt-3">
+
+                          <div class="col-md-5 form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label mx-2" for="flexCheckDefault">
+                              regex-découpage
+                            </label>
+                          </div>
+
+                          <div class="col-md-5 form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                            <label class="form-check-label mx-2" for="flexCheckChecked">
+                              regex-extraction
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+
+                          <div class="form-group col-md-6 mt-3">
+                            <label for="" class="">Lier à</label>
+                            <select type="name" class="w-100" name="name" id="" >
+                              <option value="">-----------</option>
+                              <option value="">-----------</option>
+                              <option value="">-----------</option>
+                            </select>
+                          </div>
+
+                          <div class="form-group col-md-6 mt-3">
+                            <label for="" class="">Table associée</label>
+                            <select type="name" class="w-100" name="name" id="" >
+                              <option value="">-----------</option>
+                              <option value="">-----------</option>
+                              <option value="">-----------</option>
+                            </select>
+                          </div>
+
+                        </div>
+
+                        <div class="form-group mt-3">
+                          <label for="" class="">Commentaire</label>
+                          <textarea type="name" class="w-100" name="name" id="" ></textarea>
+                        </div>
+
+                        <div class="row line">
+
+                          <div class="form-group col-md-5 mt-3">
+                            <label for="" class="">Champ</label>
+                            <select type="name" class="w-100" name="name" id="" >
+                              <option value="">-----------</option>
+                              <option value="">-----------</option>
+                              <option value="">-----------</option>
+                            </select>
+                          </div>
+
+                          <div class="form-group col-md-5 mt-3">
+                            <label for="" class="">Position</label>
+                            <input type="number" class="w-100" name="name" id="" >
+                          </div>
+
+                          <div class="col-md-2 mt-3 pt-4">
+                            <a href="#" class="add-line"><i class="bi bi-plus-circle-fill mr-2"></i>Add line</a>
+                          </div>
+
+                        </div>
+
+                        <div class="form-group mt-3">
+                          <a href="#" class="add-csv-regex"><i class="bi bi-plus-circle-fill mr-2"></i>Add box</a>
+                        </div>
+
+                      </fieldset>
+                      <!-- CSV Regex End -->
+
+                      <!-- Excel Regex -->
+                      <fieldset id="excel" class="regex">
+
+                        <legend>Expression régulière format excel</legend>
+                        <div class="divider"></div>
+
+                        <div class="row">
+
+                          <div class="form-group col-md-4 mt-3">
+                            <label for="" class="">Colonne</label>
+                            <input type="name" class="w-100" name="name" id="" >
+                          </div>
+
+                          <div class="form-group col-md-8 mt-3">
+                            <label for="" class="">Expression</label>
+                            <input type="name" class="w-100" name="name" id="" >
+                          </div>
+
+                        </div>
+
+                        <div class="form-group row d-flex justify-content-center mt-3">
+
+                          <div class="col-md-5 form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label mx-2" for="flexCheckDefault">
+                              regex-découpage
+                            </label>
+                          </div>
+
+                          <div class="col-md-5 form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                            <label class="form-check-label mx-2" for="flexCheckChecked">
+                              regex-extraction
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                          <label for="" class="">Table associée</label>
+                          <select type="name" class="w-100" name="name" id="" >
+                            <option value="">-----------</option>
+                            <option value="">-----------</option>
+                            <option value="">-----------</option>
+                          </select>
+                        </div>
+
+                        <div class="row line">
+
+                          <div class="form-group col-md-5 mt-3">
+                            <label for="" class="">Champ</label>
+                            <select type="name" class="w-100" name="name" id="" >
+                              <option value="">-----------</option>
+                              <option value="">txt - csv - rtf</option>
+                              <option value="">excel</option>
+                            </select>
+                          </div>
+
+                          <div class="form-group col-md-5 mt-3">
+                            <label for="" class="">Position</label>
+                            <input type="number" class="w-100" name="name" id="" >
+                          </div>
+
+                          <div class="col-md-2 mt-3 pt-4">
+                            <a href="#" class="add-line"><i class="bi bi-plus-circle-fill mr-2"></i>Add line</a>
+                          </div>
+
+                        </div>
+
+                        <div class="form-group mt-3">
+                          <a href="#" class="add-excel-regex"><i class="bi bi-plus-circle-fill mr-2"></i>Add box</a>
+                        </div>
+
+                      </fieldset>
+                      <!-- Excel Regex End -->
+
+                    </div>
+
+                    <div class="form-group my-0 mx-5">
+                      <button type="submit" class="col-md-2">Créer</button>
+                    </div>
+
+                  </form>
+
+                </div>
+
+              </div>
+              <!-- List Model End -->
+
+              <!-- List Model -->
+              <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+
+                <table id="file-model-table" class="table table-striped table-bordered display nowrap mt-5" style="width:100%">
+                  <thead>
+                      <tr>
+                          <th>Nom</th>
+                          <th>Format</th>
+                          <th>Regex</th>
+                          <th>Regex <br> découpage</th>
+                          <th>Regex <br> extraction</th>
+                          <th>Regex lié</th>
+                          <th>Table <br> concernée</th>
+                          <th>Commentaire</th>
+                          <th>Date</th>
+                          <th>heure</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for model in models_importation %}
+                        <tr>
+                          <td>{{ model.name }}</td>
+                          <td>{{ model.format }}</td>
+                          <td>[a-zA-Z0-9_]{[a-zA-Z0-9_]}</td>
+                          <td>Oui</td>
+                          <td>Non</td>
+                          <td>Name1</td>
+                          <td>{{ model.concerned_tables}}</td>
+                          <td>{{ model.table_type.regularexpression_set.all }}</td>
+                          <td>{{ model.created.date }}</td>
+                          <td>{{ model.created.time }}</td>
+                          <td>
+                            <a href="#"><i class="bi bi-trash"></i></a>
+                            <a href="#"><i class="bi bi-pen"></i></a>
+                          </td>
+                        </tr>
+                    {% endfor %}
+
+                  </tbody>
+                </table>
+
+              </div>
+              <!-- List Model End -->
+
+              </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+
+{% endblock %}
+{% block footer_script %}
+    <script type="application/javascript">
+        $(document).ready(function() {
+                $('#dpt-table').DataTable({
+                    "scrollX": true
+                });
+                $('#file-model-table').DataTable(
+
+            );
+        });
+
+    </script>
+
+{% endblock %}

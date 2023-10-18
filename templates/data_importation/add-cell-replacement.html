@@ -1,0 +1,173 @@
+{% extends 'block/base.html' %}
+
+{% block title %}
+    Ajouter une expression régulière
+{% endblock %}
+
+{% block main %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Connecter les expressions régulières aux tables concernées</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+            {{ form.errors }}
+            {{ cell_form.errors }}
+            {% for error in form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+        </div>
+        <!-- Alert Messages End -->
+
+        <div class="row d-flex">
+            <div class="col-md-12">
+
+                <!-- Profile Edit Form -->
+                <form action="{% if cell %}{% url 'import_data:add_field_to_cell' cell.pk  %}{% else %}{% url 'import_data:add-fields-to-regular-expression' reg.pk  %}{% endif %}" id="id_form_reg_expression" method="post" class="profile-form">
+                    {% csrf_token %}
+                    <input type="hidden" id="id_next_action" name="next_action" value="0"/>
+                    <input type="hidden" id="{{ form.table.id_for_label }}" name="table" />
+                    <input type="hidden" id="{{ form.attr_name.id_for_label }}" name="attr_name" />
+                    <div class="row mb-3">
+                      <label for="id_choice_table" class="col-md-4 col-lg-3 col-form-label">Table: <small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <select name="id_choice_table" class="form-control" id="id_choice_table" required>
+                            <option value="">----------</option>
+
+                          {% for table in tables %}
+                              <option value={{ table }} {% if cell.0 == profile.cell %}selected{% endif %}>{{ table }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="id_choice_field" class="col-md-4 col-lg-3 col-form-label">Champ: <small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <select name="choice_field" class="form-control" id="id_choice_field" onload="get_data()" required>
+                            <option value="">----------</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                          <label for="{{ form.format.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Format de données: <small><sup>*</sup></small></label>
+                          <div class="col-md-8 col-lg-9">
+                            <select name="format" class="form-control" id="{{ form.format.id_for_label }}">
+                                  <option value="" selected>----------</option>
+                                  {% for format in formats %}
+                                      <option value={{ format.0 }} {% if cell.0 == profile.cell %}selected{% endif %}>{{ format.0 }}</option>
+                                  {% endfor %}
+                            </select>
+                          </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="{{ form.value.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Valeur: <small><sup>*</sup></small></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="value" type="text" class="form-control" id="{{ form.value.id_for_label }}" value="{{ form.value.value|default:'' }}" required>
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit">Enregistrer</button>
+                      <button type="submit" id="save_and_add-1">Enregistrer & Ajouter un autre</button>
+                        <button type="submit" id="save_and_add-2">Enregistrer & Ajouter</button>
+                    </div>
+
+                </form>
+                  <!-- End Profile Edit Form -->
+
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+{% endblock %}
+{% block footer_script %}
+    <script type="application/javascript">
+        const instance = axios.create({
+                baseURL: 'http://127.0.0.1:8000/api/',
+                timeout: 5000
+        });
+
+        const get_data = () => {
+            let value = $("#id_choice_table option:selected").attr("value")
+            $("#id_choice_field option").remove()
+            if(value.length){
+                        instance.get('data-reference/' + value + '/fields/').then((response) => {
+
+                        $("#id_choice_field").append($('<option>', {value:"", text:"----------"}))
+                        response.data.map((value, index)=>{
+                            if (value[0] !== 'id'){
+                                $("#id_choice_field").append($('<option>', {value:value[0], text:value[0]}))
+                            }
+
+                        })
+                    })
+        }
+            else {
+                    $("#id_choice_field").append($('<option>', {value:"", text:"----------"}))
+                }
+            }
+
+        $(document).ready(()=>{
+            $("#save_and_add-1").on("click", (event)=>{
+                // event.preventDefault()
+                // $("#id_next_action").data("value", "1")
+                $("#id_next_action").attr("value", "1")
+                // $("#id_form_reg_expression").submit()
+                // event.preventDefault()
+            })
+            $("#save_and_add-2").on("click", (event)=>{
+
+                // $("#id_next_action").data("value", "1")
+                $("#id_next_action").attr("value", "2")
+                // $("#id_form_reg_expression").submit()
+            })
+
+            $("#id_choice_table").on('change', (event)=>{
+                get_data()
+                $("#{{ form.table.id_for_label }}").attr("value", $("#id_choice_table option:selected").attr("value"))
+            })
+            $("#id_choice_table").ready(()=>{
+                get_data()
+                $("#{{ form.table.id_for_label }}").attr("value", $("#id_choice_table option:selected").attr("value"))
+            })
+            $("#id_choice_field").on('change', (event)=>{
+
+                $("#{{ form.attr_name.id_for_label }}").attr("value", $("#id_choice_field option:selected").attr("value"))
+            })
+            $("#id_choice_field").ready(()=>{
+                $("#{{ form.attr_name.id_for_label }}").attr("value", $("#id_choice_field option:selected").attr("value"))
+            })
+
+
+        })
+    </script>
+{% endblock %}

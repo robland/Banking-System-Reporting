@@ -1,0 +1,176 @@
+{% extends 'block/base.html' %}
+{% block title %}
+    Importation de données
+{% endblock %}
+{% block links %}
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Dropzone cdn -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+{% endblock %}
+
+{% block main %}
+      <main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Importation des données / Monétique</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="import-data">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Les fichiers ont parfaitement été importé.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>failure !</strong> Les fichiers n'ont pas été importé.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        </div>
+        <!-- Alert Messages End -->
+
+        <div class="row  my-4">
+
+            <div class="col-md-12">
+
+              <form action="{% url 'import_data:import_data' %}" enctype="multipart/form-data"
+                class="dropzone dropzone-custom"
+                id="my-awesome-dropzone">
+                  {% csrf_token %}
+              </form>
+
+              <input type="button" id="upload-files" value="Importer">
+
+            </div>
+
+        </div>
+
+        <h4>Etat des importations</h4>
+        <div class="divider"></div>
+        <div class="mb-5"></div>
+
+        <table id="import-table" class="table table-striped table-bordered display nowrap mt-5" style="width:100%">
+          <thead>
+              <tr>
+                  <th>Nature</th>
+                  <th>Nom du fichier</th>
+                  <th>Format du fichier</th>
+                  <th>Date</th>
+                  <th>heure</th>
+                  <th>Actions</th>
+              </tr>
+          </thead>
+          <tbody>
+          {% for data in imports %}
+              <tr>
+                  <td>
+                      {% if data.model_import %}
+                        {{ data.model_import.name }}
+                      {% else %}
+                          <a href="#" class="unpacking-data" data-django-model="{{ data.pk }}" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-box-seam"></i></a>
+                      {% endif %}
+                      </td>
+                  <td>{{ data.file.name }}</td>
+                  <td>{{ data.model_import.format }}</td>
+                  <td>{{ data.created.date }}</td>
+                  <td>{{ data.created.time }}</td>
+                  <td>
+                    <a href="#"><i class="bi bi-trash"></i></a>
+                    <a href="#"><i class="bi bi-pen"></i></a>
+                  </td>
+          {% endfor %}
+
+
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+           <div class="row mb-3">
+                <label for="dpt" class="col-md-4 col-lg-3 col-form-label">Département <small><sup>*</sup></small></label>
+                <div class="col-md-8 col-lg-9">
+                    <form id="form-modal" action="{% url 'import_data:import_data' %}" method="post">
+                        {% csrf_token %}
+                        <select name="model_import" class="form-control" id="id_model_import">
+                            {% for import in models_import %}
+                                <option value="{{ import.0 }}">{{ import.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+
+                </div>
+           </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="modal-button">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </main>
+{% endblock %}
+{% block footer_script %}
+    <script type="application/javascript">
+        $(document).ready(function() {
+            $('#import-table').DataTable(
+                {
+                    "scrollX": true
+                }
+            );
+
+            $('.unpacking-data').on('click', (event)=>{
+                console.log("Hello World", event.data)
+            });
+            $('#modal-button').on('click', (event)=>{
+                const selected = $('.unpacking-data')
+                const form = $('#form-modal')
+                let pk = selected.data('djangoModel');
+                form.attr("action",  window.location.origin + "/api/importation/extraction/" + pk + "/")
+                form.attr("method",  "POST")
+                form.submit()
+            })
+        });
+
+    </script>
+    <script>
+        Dropzone.autoDiscover = false;
+        const myDropzone = new Dropzone(".dropzone", {
+            acceptedFiles: ".rtf, .csv, .txt, .xls, .xlsx, .docx, .docs, .doc",
+            autoProcessQueue: true,
+            parallelUploads: 4
+        });
+
+        document.querySelector("#upload-files").click(function() {
+            myDropzone.processQueue();
+        });
+    </script>
+
+{% endblock %}

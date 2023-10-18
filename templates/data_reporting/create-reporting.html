@@ -1,0 +1,155 @@
+{% extends 'block/base.html' %}
+
+{% block title %}
+    Créer un Utilisateur
+{% endblock %}
+
+{% block main %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Génerer un reporting</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+            {% for error in form.errors.values %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+        </div>
+        <!-- Alert Messages End -->
+
+        <div class="row d-flex">
+            <div class="col-md-12">
+
+                <!-- Profile Edit Form -->
+                <div class="card row-md-4">
+                            <h5 class="card-header">Generer un reporting</h5>
+                            <div class="card-body">
+                                <div>
+                                    <form id="id-form" action="{% url 'data_reporting:generate-reporting' %}" method="post" class="profile-form" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Name<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input name="name" type="text" class="form-control" id="{{ form.name.id_for_label }}" value="{{ form.name.value|default:'' }}">
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="{{ form.model_reporting.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Modèle<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <select name="model_reporting" type="text" class="form-control" id="{{ form.model_reporting.id_for_label }}">
+                                                  <option>----------</option>
+                                                  {% for m in reporting_models %}
+                                                    <option value="{{ m.pk}}" {% if form.model_reporting.value == m.name %}selected{% endif %}>{{ m.name|upper }}</option>
+                                                  {% endfor %}
+
+                                              </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                      <button type="submit" class="">Enregistrer</button>
+                                    </div>
+                                    {% comment %}
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Table de données<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <select id="id-model" class="w-100" name="name">
+                                            <option value="">-----------</option>
+
+
+                                            {% for model in models %}
+
+                                                <option value="{{ model.model }}" >{{ model.model }}</option>
+
+                                            {% endfor %}
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+
+                                          {% for model in models %}
+                                              <div class="col my-3">
+                                                <div class="mx-3">
+                                                    <input type="checkbox" id="id_{{ model.model }}" data-field-type="{{ model.model }}" value="{{ model.model }}">
+                                                    <label for="id_{{ model.model }}">{{ model.model }}</label>
+                                                </div>
+                                                  <div>
+                                                      <select>
+                                                            <option> Hello WOrld!</option>
+                                                        </select>
+                                                  </div>
+
+
+                                              </div>
+                                          {% endfor %}
+
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Table de données<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input type="checkbox" value="" checked>
+                                      </div>
+                                    </div>
+                                    {% endcomment %}
+
+                                </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+                  <!-- End Profile Edit Form -->
+
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+
+{% endblock %}
+{% block footer_script %}
+
+        <script type="application/javascript">
+        const add_field = (selector, tag, attrs = []) =>{
+
+            attrs.map((value, index) => {
+                tag.attr(value[0], value[1])
+            })
+            selector.after(tag)
+            return tag
+        }
+        $(document).ready(()=>{
+
+        })
+
+        </script>
+    {% endblock %}

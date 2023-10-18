@@ -1,0 +1,119 @@
+{% extends 'block/base.html' %}
+
+{% block title %}
+    Créer un Utilisateur
+{% endblock %}
+
+{% block main %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Créer un Model d'Extraction de Données</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+            {% for error in form.errors.values %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+        </div>
+        <!-- Alert Messages End -->
+
+        <div class="row d-flex">
+            <div class="col-md-12">
+
+                <!-- Profile Edit Form -->
+                <div class="card row-md-3">
+                            <h5 class="card-header">{% if model_table %}Modifier le modèle de tableau{% else %}Créer un modèle de tableau{% endif %}</h5>
+                            <div class="card-body">
+                                <form action="{% if model_table %}{% url 'data-reference:edit-model-table' model_table.pk %}{% else %}{% url 'data-reference:create-model-table' %}{% endif %}" method="post" class="profile-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" id="id_next_action" name="next_action" value="0"/>
+
+                                    <div class="row mb-3">
+                                      <label for="{{ form.title.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Titre du Tableau<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input name="title" type="text" class="form-control" id="{{ form.title.id_for_label }}" value="{{ form.title.value|default:'' }}">
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="{{ form.model_name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Table de Données<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <select id="model-format" class="w-100" name="model_name">
+                                            <option value="">-----------</option>
+                                            {% for table in models %}
+                                                <option value="{{ table.model }}" {% if form.model_name.value == table.model %}
+                                                selected
+                                                        {% else %}
+                                                {% endif %} >{{ table.model }}</option>
+                                            {% endfor %}
+                                        </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit">Enregistrer</button>
+                                        <button type="submit" id="save_and_add-1">Enregistrer & Ajouter un autre</button>
+                                        <button type="submit" id="save_and_add-2">Enregistrer & Ajouter</button>
+                                     </div>
+                                </form>
+
+
+                            </div>
+                        </div>
+
+                  <!-- End Profile Edit Form -->
+
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+    {% block footer_script %}
+        <script type="application/javascript">
+        $(document).ready(()=>{
+            $("#save_and_add-1").on("click", (event)=>{
+                // event.preventDefault()
+                // $("#id_next_action").data("value", "1")
+                $("#id_next_action").attr("value", "1")
+                // $("#id_form_reg_expression").submit()
+                // event.preventDefault()
+            })
+            $("#save_and_add-2").on("click", (event)=>{
+
+                // $("#id_next_action").data("value", "1")
+                $("#id_next_action").attr("value", "2")
+                // $("#id_form_reg_expression").submit()
+            })
+        })
+
+        </script>
+    {% endblock %}
+{% endblock %}

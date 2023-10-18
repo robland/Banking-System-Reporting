@@ -1,0 +1,137 @@
+{% extends 'block/base.html' %}
+
+{% block title %}
+    Créer un Utilisateur
+{% endblock %}
+
+{% block main %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Créer un Model d'Extraction de Données</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+            {% for error in form.errors.values %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+        </div>
+        <!-- Alert Messages End -->
+
+        <div class="row d-flex">
+            <div class="col-md-12">
+
+                <!-- Profile Edit Form -->
+                <div class="card row-md-3">
+                            <h5 class="card-header"> {{ "Modifier le Modèle" }}</h5>
+                            <div class="card-body">
+                                <form action="{% url 'import_data:edit-model-importation' model_import.pk %}" method="post" class="profile-form">
+                                    {% csrf_token %}
+                                    <div class="row mb-3">
+                                      <label for="{{ form.name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Titre du Modèle <small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <input name="name" type="text" class="form-control" id="{{ form.name.id_for_label }}" value="{{ form.name.value|default:'' }}">
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="{{ form.format.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">format<small><sup>*</sup></small></label>
+                                      <div class="col-md-8 col-lg-4">
+                                        <select id="model-format" class="w-100" name="format">
+                                            <option value="">-----------</option>
+                                            {% for format in formats %}
+                                                <option value="{{ format.0 }}" {% if form.format.value == format.0 %}
+                                                selected
+                                                        {% else %}
+                                                {% endif %} >{{ format.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                      <button type="submit" class="">Enregistrer</button>
+                                    </div>
+                                </form>
+
+
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-primary">Add</a>
+                                <a href="#" class="btn btn-primary">Edit</a>
+                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalBase{{ base.pk }}">Delete</a>
+
+                            </div>
+                            <div class="modal fade" id="modalBase{{ base.pk }}" tabindex="-1" role="dialog" aria-labelledby="modal-base-title{{ base.pk }}" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="modal-base-title{{ fields.pk }}">Confirmation</h5>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <div class="col-md-12">
+
+                                            <!-- Profile Edit Form -->
+                                            <form action="#" id="form_delete_base_{{ base.pk }}" method="post" class="profile-form">
+                                                {% csrf_token %}
+                                                <div class="row m-auto">
+                                                  <h1>Êtes vous sûr(e) de vouloir supprimer cet élément?</h1>
+                                                  <input name="confirmation" type="hidden"  id="id_confirmation" value="no">
+                                                  <input name="key" type="hidden" id="id_key" value="">
+                                                </div>
+
+
+                                            </form>
+                                              <!-- End Profile Edit Form -->
+
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="base-cancel btn btn-danger" id="btn_delete_{{ base.pk }}">Delete</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                            </div>
+
+
+                        </div>
+
+                  <!-- End Profile Edit Form -->
+
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+{% endblock %}

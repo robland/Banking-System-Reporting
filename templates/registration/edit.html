@@ -1,0 +1,140 @@
+{% extends 'block/base.html' %}
+
+{% block title %}
+    Créer un Utilisateur
+{% endblock %}
+
+{% block main %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Création de profils et droits d'accès</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="">
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+            {{ user_form.errors }}
+            {% for error in user_form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+
+
+
+
+
+        </div>
+        <!-- Alert Messages End -->
+                        <div class="card row-md-3">
+                            <h5 class="card-header">Editer profil</h5>
+                            <div class="card-body">
+                                <form action="{% url 'users:edit_user_profile' %}" method="post" enctype="multipart/form-data" class="profile-form">
+    {% csrf_token %}
+{{ profile_form.errors }}
+{{ user_form.errors }}
+    <input name="user" type="hidden"  id="{{ profile_form.user.id_for_label }}" value="{{ profile_form.user.value|default:''}}">
+    <div class="row mb-3">
+      <label for="{{ profile_form.image.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Image Profil</label>
+      <div class="col-md-8 col-lg-9">
+        <input name="image" type="file" class="form-control" id="{{ profile_form.image.id_for_label }}" value="{{ profile.image.name}}" accept=".png, .jpg, .jpeg">
+          {{ profile.image.name}}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="{{ user_form.first_name.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Nom complet <small><sup>*</sup></small></label>
+      <div class="col-md-8 col-lg-9">
+        <input name="first_name" type="text" class="form-control" id="{{ user_form.first_name.id_for_label }}" value="{{ user_form.first_name.value|default:'' }}">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="{{ profile_form.about.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">A Propos</label>
+      <div class="col-md-8 col-lg-9">
+        <textarea name="about" class="form-control" id="{{ profile_form.about.id_for_label }}" style="height: 100px">{{ profile_form.about.value|default:'' }} </textarea>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="{{ profile_form.job.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Poste <small><sup>*</sup></small></label>
+      <div class="col-md-8 col-lg-9">
+        <input name="job" type="text" class="form-control" id="{{ profile_form.job.id_for_label }}" value="{{ profile_form.job.value|default:'' }}">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="dpt" class="col-md-4 col-lg-3 col-form-label">Département <small><sup>*</sup></small></label>
+        <div class="col-md-8 col-lg-9">
+
+          <select name="department" class="form-control" id="dpt">
+            <option disabled> ---CHoisissez un département---</option>
+
+              {% for department in departments %}
+                  <option value={{ department.0 }} {% if department.0 == profile.department %}selected{% endif %}>{{ department.1 }}</option>
+              {% endfor %}
+          </select>
+        </div>
+      </div>
+
+    <div class="row mb-3">
+      <label for="{{ profile_form.address.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Adresse</label>
+      <div class="col-md-8 col-lg-9">
+        <input name="address" type="text" class="form-control" id="{{ profile_form.address.id_for_label }}" value="{{ profile_form.address.value|default:'' }}">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="{{ profile_form.phone.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Téléphone</label>
+      <div class="col-md-8 col-lg-9">
+        <input name="phone" type="text" class="form-control" id="{{ profile_form.phone.id_for_label }}" value="{{ profile_form.phone.value|default:'' }}">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="{{ user_form.username.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Username</label>
+      <div class="col-md-8 col-lg-9">
+        <input name="username" type="text" class="form-control" id="{{ user_form.username.id_for_label }}" value="{{ user_form.username.value|default:'' }}">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="{{ user_form.email.id_for_label }}" class="col-md-4 col-lg-3 col-form-label">Email <small><sup>*</sup></small></label>
+      <div class="col-md-8 col-lg-9">
+        <input name="email" type="email" class="form-control" id="{{ user_form.email.id_for_label }}" value="{{ user_form.email.value|default:'' }}">
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="">Enregistrer</button>
+    </div>
+  </form>
+                            </div>
+                        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+{% endblock %}

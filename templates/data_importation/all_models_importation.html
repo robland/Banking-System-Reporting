@@ -1,0 +1,174 @@
+{% extends 'block/base.html' %}
+{% load static %}
+
+{% block main %}
+    <main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Connecter les expressions régulières aux tables concernées</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section>
+
+      <div class="container-fluid">
+
+        <!-- Alert Messages -->
+        <div class="my-3">
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Profil mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Success !</strong> Mot de passe mise à jour avec succès.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+            {{ form.errors }}
+            {{ cell_form.errors }}
+            {% for error in form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>failure !</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+        </div>
+        <!-- Alert Messages End -->
+
+
+        <div class="row d-flex">
+            <div class="col-md-12">
+            {% for model in bases %}
+
+
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                <div class="col-md-4">
+                                    {% if model.format == 'EXCEL' %}
+                                        <img src="https://cdn.cdnlogo.com/logos/m/53/microsoft-excel.svg" height="200px" width="200px" class="img-fluid rounded-start" alt="...">
+                                        {% elif model.format == 'RTF' %}
+                                            <img src="{% static 'img/profil.jpg' %}" class="img-fluid rounded-start">
+                                        {% elif model.format == 'TXT' %}
+                                        {% elif model.format == 'RTF' %}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-8">
+                                  <div class="card-body">
+                                      <div>
+                                          <h5 class="card-title">{{ model.name }}</h5>
+                                          <p class="card-text">{{ model.format }} </p>
+                                          <p class="card-text">{{ model.item.base_excel_to_cells.all|length }} Cellule(s)</p>
+                                          <p class="card-text"><small class="text-muted">{{ model.created }}</small></p>
+                                      </div>
+                                      <div class="my-3">
+                                          <a href="{% url 'import_data:detail-model-importation' model.pk %}" class="btn btn-primary">Detail</a>
+                                          {% if model.item.base_excel_to_cells.all|length == 0  %}
+                                            <a href="{% url 'import_data:edit-model-importation' model.pk %}" class="btn btn-primary">Edit</a>
+                                          {% endif %}
+                                          <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalBase{{ model.pk }}">Delete</a>
+                                          <div class="modal fade" id="modalBase{{ model.pk }}" tabindex="-1" role="dialog" aria-labelledby="modal-base-title{{ base.pk }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h5 class="modal-title" id="modal-base-title">Confirmation</h5>
+                                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                    <div class="col-md-12">
+
+                                                        <!-- Profile Edit Form -->
+                                                        <form action="{% url 'import_data:delete-model-importation' model.pk  %}" id="form_delete_base_{{ model.pk }}" method="post" class="profile-form">
+                                                            {% csrf_token %}
+                                                            <div class="row m-auto">
+                                                              <h1>Êtes vous sûr(e) de vouloir supprimer cet élément?</h1>
+                                                              <input name="confirmation" type="hidden"  id="id_confirmation" value="no">
+                                                              <input name="key" type="hidden" id="id_key" value="">
+                                                            </div>
+
+
+                                                        </form>
+                                                          <!-- End Profile Edit Form -->
+
+                                                    </div>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="base-cancel btn btn-danger" id="btn_delete_{{ model.pk }}">Delete</button>
+                                                  </div>
+                                    </div>
+                                             </div>
+                                          </div>
+
+                                      </div>
+
+                                  </div>
+                                </div>
+                                </div>
+                            </div>
+                            {% comment %}
+                            <div class="card col-md-4 m-1">
+                                <h5 class="card-header"> {{ base }}</h5>
+                                <div class="card-body">
+                                    <h5 class="card-title">Expression: {{ base.reg_expression }}</h5>
+                                <img src="{% static 'img/logo.png' %}" class="card-img-top" alt="..."/>
+                                    <div>
+                                        {% for fields in base.cells_to_fields.all %}
+                                            <p class="card-text">{{ fields.table }} || {{ fields.attr_name }} || {{ fields.value }}</p>
+                                        {% endfor %}
+
+                                    </div>
+
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                                <h5 class="card-footer">{{ base.created }} <i class="bi bi-trash-fill"></i> <i class="bi bi-pen-fill"></i></h5>
+                            </div>
+                            {% endcomment %}
+
+                        {% comment %}
+                        <h5 class="card-title">Special title treatment</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        {% endcomment %}
+
+            {% endfor %}
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  </main>
+
+
+{% endblock %}
+{% block footer_script %}
+<script type="application/javascript">
+    $(document).ready(function() {
+            {% for base in bases %}
+
+                $("#btn_delete_{{ base.pk }}").on("click", ()=>{
+                    $("#form_delete_base_{{ base.pk }} #id_confirmation" ).attr("value", "yes")
+                    $("#form_delete_base_{{ base.pk }} #id_key" ).attr("value", "{{ base.pk }}")
+                    $("#form_delete_base_{{ base.pk }}" ).submit()
+
+                })
+                $(".base-cancel").on("click", ()=>{
+                    $("#form_delete_base_{{ base.pk }} #id_confirmation" ).attr("value", "no")
+                    $("#form_delete_base_{{ base.pk }} #id_key" ).attr("value", "")
+
+                })
+            {% endfor %}
+
+            });
+
+</script>
+{% endblock %}

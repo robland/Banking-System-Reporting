@@ -1,0 +1,127 @@
+{% extends 'block/head.html' %}
+{% load static %}
+{% block title %}
+    First Login Step!
+{% endblock %}
+
+          <div class="row justify-content-center">
+
+            <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="d-flex justify-content-center py-4">
+                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                  <img src="/public/img/logo.png" alt="">
+                  <span class="d-none d-lg-block">BRS</span>
+                </a>
+              </div><!-- End Logo -->
+
+              <div class="pt-4 pb-2">
+                <h5 class="card-title text-center pb-0 fs-4">Renseignez le code reçu</h5>
+                <p class="text-center small my-3">Un code a été envoyé à votre adresse mail</p>
+              </div>
+
+              <div class="login w-100">
+
+                <form action="#" method="post" role="form" class="login-form">
+
+                  <div class="form-group my-4 mt-md-0">
+                    <label for="">Code de vérification</label>
+                    <input type="text" class="form-control" name="email" id="email" placeholder="BRS-XXX-XX-X" required>
+                  </div>
+
+                  <div class="text-center"><button type="submit">Envoyer</button></div>
+
+                </form>
+
+              </div>
+
+              <div class="credits">
+                Designed by <a href="#">Happy Customer Development</a>
+              </div>
+
+            </div>
+
+          </div>
+
+{% block body_head %}
+    <body>
+  <main>
+
+    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+
+      <div class="container">
+
+        <div class="my-3">
+            {{ errors }}
+          {% for error in form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <strong>failure !</strong> {{ error.username }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="row justify-content-center">
+
+          <div class="col-md-4 d-flex flex-column align-items-center justify-content-center" id="area">
+
+            <div class="d-flex justify-content-center py-4">
+              <a href="index.html" class="logo d-flex align-items-center w-auto">
+                <img src="{% static 'img/logo.png' %}" alt="">
+                <span class="d-none d-lg-block">BRS</span>
+              </a>
+            </div><!-- End Logo -->
+
+            <div class="pt-4 pb-2">
+              <h5 class="card-title text-center pb-0 fs-4">Connectez-vous à votre compte</h5>
+              <p class="text-center small my-3">Entrez votre email et mot de passe pour vous connecter</p>
+            </div>
+
+            <div class="login w-100">
+
+              <form action="{% url 'users:send_code_by_email' %}" method="post" role="form" class="login-form">
+                {% csrf_token %}
+                <div class="form-group my-4 mt-md-0">
+                  <label for="{{ form.username.id_for_label }}">Username</label>
+                  <input type="text" class="form-control" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}" required/>
+                </div>
+
+                <div class="form-group my-4 mt-md-0">
+                  <label for="{{ form.password.id_for_label }}">Password</label>
+                  <input type="password" name="password" class="form-control" id="{{ form.password.id_for_label }}" placeholder="Votre mot de passe" required/>
+                </div>
+
+                <div class="text-center"><button type="submit">Connexion</button></div>
+
+              </form>
+
+            </div>
+
+            <div class="credits">
+              Designed by <a href="#">Happy Customer Development</a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+
+  <!-- <script src="/public/vendor/simple-datatables/simple-datatables.js"></script> -->
+  <script src="{% static 'jquery/jquery-3.3.1.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js" integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  </script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+
+
+</body>
+{% endblock %}
